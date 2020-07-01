@@ -30,17 +30,17 @@ type Client struct {
 	CCGoPath  string // GOPATH used for chaincode
 }
 
-func New(cfg, org, admin, user string) *Client {
+func New(cfg, org, channel, ccid, admin, user string) *Client {
 	c := &Client{
 		ConfigPath: cfg,
 		OrgName:    org,
 		OrgAdmin:   admin,
 		OrgUser:    user,
 
-		CCID:      "example2",
-		CCPath:    "github.com/fab-app/chaincode/example02/", // 相对路径是从GOPAHT/src开始的
+		CCID:      ccid,
+		CCPath:    "github.com/fabric-app/chaincode/"+ccid+"/", // 相对路径是从GOPAHT/src开始的
 		CCGoPath:  os.Getenv("GOPATH"),
-		ChannelID: "mychannel",
+		ChannelID: channel,
 	}
 
 	// create sdk

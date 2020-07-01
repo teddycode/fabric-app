@@ -4,19 +4,19 @@ version: 1.0.0
 client:
   organization: org2
   logging:
-    level: debug
+    level: info
   cryptoconfig:
-    path: ./conf/crypto-config
+    path: ./conf-local/crypto-config
   credentialStore:
-    path: ./conf/keystore/state-store
+    path: ./conf-local/keystore/state-store
   cryptoStore:
-    path: ./conf/keystore/msp
+    path: ./conf-local/keystore/msp
   tlsCerts:
     client:
       key:
-        path: ./conf/crypto-config/peerOrganizations/org2.lzawt.com/users/User1@org2.lzawt.com/tls/client.key
+        path: ./conf-local/crypto-config/peerOrganizations/org2.lzawt.com/users/User1@org2.lzawt.com/tls/client.key
       cert:
-        path: ./conf/crypto-config/peerOrganizations/org2.lzawt.com/users/User1@org2.lzawt.com/tls/client.crt
+        path: ./conf-local/crypto-config/peerOrganizations/org2.lzawt.com/users/User1@org2.lzawt.com/tls/client.crt
 
 channels:
   mychannel:
@@ -53,7 +53,7 @@ orderers:
       fail-fast: false
       allow-insecure: false
     tlsCACerts:
-      path: ./conf/crypto-config/ordererOrganizations/lzawt.com/tlsca/tlsca.lzawt.com-cert.pem
+      path: ./conf-local/crypto-config/ordererOrganizations/lzawt.com/tlsca/tlsca.lzawt.com-cert.pem
 
 peers:
   peer0.org1.lzawt.com:
@@ -66,7 +66,7 @@ peers:
       fail-fast: false
       allow-insecure: false
     tlsCACerts:
-      path: ./conf/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/tlsca.org1.lzawt.com-cert.pem
+      path: ./conf-local/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/tlsca.org1.lzawt.com-cert.pem
 
   peer1.org1.lzawt.com:
     url: peer1.org1.lzawt.com:7051
@@ -78,7 +78,7 @@ peers:
       fail-fast: false
       allow-insecure: false
     tlsCACerts:
-      path: ./conf/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/tlsca.org1.lzawt.com-cert.pem
+      path: ./conf-local/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/tlsca.org1.lzawt.com-cert.pem
 
   peer0.org2.lzawt.com:
     url: peer0.org2.lzawt.com:7051
@@ -90,7 +90,7 @@ peers:
       fail-fast: false
       allow-insecure: false
     tlsCACerts:
-      path: ./conf/crypto-config/peerOrganizations/org2.lzawt.com/tlsca/tlsca.org2.lzawt.com-cert.pem
+      path: ./conf-local/crypto-config/peerOrganizations/org2.lzawt.com/tlsca/tlsca.org2.lzawt.com-cert.pem
 
 entityMatchers:
   peer:
