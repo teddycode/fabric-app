@@ -38,7 +38,7 @@ func New(cfg, org, admin, user string) *Client {
 		OrgUser:    user,
 
 		CCID:      "example2",
-		CCPath:    "github.com/hyperledger/fabric-samples/chaincode/chaincode_example02/go/", // 相对路径是从GOPAHT/src开始的
+		CCPath:    "github.com/fab-app/chaincode/example02/", // 相对路径是从GOPAHT/src开始的
 		CCGoPath:  os.Getenv("GOPATH"),
 		ChannelID: "mychannel",
 	}

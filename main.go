@@ -3,12 +3,12 @@ package main
 import (
 	"log"
 
-	cli "github.com/fab-app/controller"
+	cli "github.com/fabric-app/controller"
 )
 
 const (
-	org1CfgPath = "./config/org1sdk-config.yaml"
-	org2CfgPath = "./config/org2sdk-config.yaml"
+	org1CfgPath = "./config/conn-fn1.yaml"
+	org2CfgPath = "./config/conn-fn2.yaml"
 )
 
 var (

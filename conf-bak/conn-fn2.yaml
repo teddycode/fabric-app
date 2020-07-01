@@ -1,0 +1,113 @@
+
+version: 1.0.0
+
+client:
+  organization: org2
+  logging:
+    level: debug
+  cryptoconfig:
+    path: ./conf/crypto-config
+  credentialStore:
+    path: ./conf/keystore/state-store
+  cryptoStore:
+    path: ./conf/keystore/msp
+  tlsCerts:
+    client:
+      key:
+        path: ./conf/crypto-config/peerOrganizations/org2.lzawt.com/users/User1@org2.lzawt.com/tls/client.key
+      cert:
+        path: ./conf/crypto-config/peerOrganizations/org2.lzawt.com/users/User1@org2.lzawt.com/tls/client.crt
+
+channels:
+  mychannel:
+    peers:
+      peer0.org1.lzawt.com:
+      peer1.org1.lzawt.com:
+      peer0.org2.lzawt.com:
+
+
+organizations:
+  org1:
+    mspid: Org1MSP
+    cryptoPath: peerOrganizations/org1.lzawt.com/users/{username}@org1.lzawt.com/msp
+    peers:
+      - peer0.org1.lzawt.com
+      - peer1.org1.lzawt.com
+  org2:
+    mspid: Org2MSP
+    cryptoPath:  peerOrganizations/org2.lzawt.com/users/{username}@org2.lzawt.com/msp
+    peers:
+      - peer0.org2.lzawt.com
+  ordererorg:
+    mspID: OrdererMSP
+    cryptoPath: ordererOrganizations/lzawt.com/users/{username}@lzawt.com/msp
+
+orderers:
+  orderer2.lzawt.com:
+    url: orderer2.lzawt.com:8050
+    grpcOptions:
+      ssl-target-name-override: orderer2.lzawt.com
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+    tlsCACerts:
+      path: ./conf/crypto-config/ordererOrganizations/lzawt.com/tlsca/tlsca.lzawt.com-cert.pem
+
+peers:
+  peer0.org1.lzawt.com:
+    url: peer0.org1.lzawt.com:7051
+    grpcOptions:
+      ssl-target-name-override: peer0.org1.lzawt.com
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+    tlsCACerts:
+      path: ./conf/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/tlsca.org1.lzawt.com-cert.pem
+
+  peer1.org1.lzawt.com:
+    url: peer1.org1.lzawt.com:7051
+    grpcOptions:
+      ssl-target-name-override: peer1.org1.lzawt.com
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+    tlsCACerts:
+      path: ./conf/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/tlsca.org1.lzawt.com-cert.pem
+
+  peer0.org2.lzawt.com:
+    url: peer0.org2.lzawt.com:7051
+    grpcOptions:
+      ssl-target-name-override: peer0.org2.lzawt.com
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+    tlsCACerts:
+      path: ./conf/crypto-config/peerOrganizations/org2.lzawt.com/tlsca/tlsca.org2.lzawt.com-cert.pem
+
+entityMatchers:
+  peer:
+    - pattern: peer0.org1.lzawt.com
+      urlSubstitutionExp: localhost:7051
+      sslTargetOverrideUrlSubstitutionExp: peer0.org1.lzawt.com
+      mappedHost: peer1.org1.lzawt.com
+    - pattern: peer1.org1.lzawt.com
+      urlSubstitutionExp: localhost:8051
+      sslTargetOverrideUrlSubstitutionExp: peer1.org1.lzawt.com
+      mappedHost: peer0.org2.lzawt.com
+    - pattern: peer0.org2.lzawt.com
+      urlSubstitutionExp: localhost:9051
+      sslTargetOverrideUrlSubstitutionExp: peer0.org2.lzawt.com
+      mappedHost: peer1.org2.lzawt.com
+  orderer:
+    - pattern: orderer2.lzawt.com
+      urlSubstitutionExp: localhost:8050
+      sslTargetOverrideUrlSubstitutionExp: orderer2.lzawt.com
+      mappedHost: orderer2.lzawt.com
