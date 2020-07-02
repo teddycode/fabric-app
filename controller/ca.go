@@ -4,7 +4,6 @@ import "C"
 import (
 	"fmt"
 	clientMSP "github.com/hyperledger/fabric-sdk-go/pkg/client/msp"
-	"github.com/hyperledger/fabric-sdk-go/pkg/common/providers/context"
 	"github.com/hyperledger/fabric-sdk-go/pkg/core/cryptosuite"
 	"github.com/hyperledger/fabric-sdk-go/pkg/msp"
 	"log"
@@ -16,9 +15,9 @@ func (c *Client) NewCAClient() {
 	log.Print("Enroll registrar")
 	ctxProvider := c.SDK.Context()
 	mspClient, err := clientMSP.New(ctxProvider)
-	registrarEnrollID, registrarEnrollSecret := c.getRegistrarEnrollmentCredentials(ctxProvider)
+	//registrarEnrollID, registrarEnrollSecret := c.getRegistrarEnrollmentCredentials(ctxProvider)
 
-	err = mspClient.Enroll(registrarEnrollID, clientMSP.WithSecret(registrarEnrollSecret))
+	err = mspClient.Enroll("admin", clientMSP.WithSecret("adminpw"))
 	if err != nil {
 		log.Fatalf("enroll registrar failed: %v", err)
 	}
@@ -50,27 +49,27 @@ func (c *Client) removePath(storePath string) {
 	}
 }
 
-func (c *Client) getRegistrarEnrollmentCredentials(ctxProvider context.ClientProvider) (string, string) {
-
-	ctx, err := ctxProvider()
-	if err != nil {
-		fmt.Printf("failed to get context: %v\n", err)
-	}
-
-	clientConfig := ctx.IdentityConfig().Client()
-	//if err != nil {
-	//	fmt.Printf("config.Client() failed: %v\n", err)
-	//}
-
-	myOrg := clientConfig.Organization
-
-	caConfig, ok := ctx.IdentityConfig().CAConfig(myOrg)
-	if ok {
-		fmt.Printf("CAConfig failed: %v\n", err)
-	}
-
-	return caConfig.Registrar.EnrollID, caConfig.Registrar.EnrollSecret
-}
+//func (c *Client) getRegistrarEnrollmentCredentials(ctxProvider context.ClientProvider) (string, string) {
+//
+//	ctx, err := ctxProvider()
+//	if err != nil {
+//		fmt.Printf("failed to get context: %v\n", err)
+//	}
+//
+//	clientConfig := ctx.IdentityConfig().Client()
+//	//if err != nil {
+//	//	fmt.Printf("config.Client() failed: %v\n", err)
+//	//}
+//
+//	myOrg := clientConfig.Organization
+//
+//	caConfig, ok := ctx.IdentityConfig().CAConfig(myOrg)
+//	if ok {
+//		fmt.Printf("CAConfig failed: %v\n", err)
+//	}
+//
+//	return caConfig.Registrar.EnrollID, caConfig.Registrar.EnrollSecret
+//}
 
 func GenerateRandomID() string {
 	return randomString(10)
@@ -87,7 +86,7 @@ func randomString(strlen int) string {
 }
 
 // Register a new user
-func (c *Client) registerUser(username, orgName, secret, identityTypeUser string) (string, bool) {
+func (c *Client) RegisterUser(username, orgName, secret, identityTypeUser string) (string, bool) {
 	// Register the new user
 	log.Printf("User not found, registering new user: %v", username)
 	testAttributes := []clientMSP.Attribute{
@@ -119,7 +118,7 @@ func (c *Client) registerUser(username, orgName, secret, identityTypeUser string
 }
 
 // Enroll a user
-func (c *Client) enrollUser(username, orgName, secret, identityTypeUser string) (string, bool) {
+func (c *Client) EnrollUser(username, orgName, secret, identityTypeUser string) (string, bool) {
 	//ctxProvider := c.SDK.Context(fabsdk.WithOrg(orgName))
 	//mspClient, err := clientMSP.New(ctxProvider)
 	//if err != nil {
@@ -137,7 +136,7 @@ func (c *Client) enrollUser(username, orgName, secret, identityTypeUser string) 
 }
 
 // getRegisteredUser get registered user. If user is not enrolled, enroll new user
-func (c *Client) getRegisteredUser(username, orgName, secret, identityTypeUser string) (string, bool) {
+func (c *Client) GetRegisteredUser(username, orgName, secret, identityTypeUser string) (string, bool) {
 	//ctxProvider := c.SDK.Context(fabsdk.WithOrg(orgName))
 	//mspClient, err := clientMSP.New(ctxProvider)
 	//if err != nil {

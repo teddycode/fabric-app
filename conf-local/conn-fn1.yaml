@@ -8,9 +8,9 @@ client:
   cryptoconfig:
     path: ./conf-local/crypto-config
   credentialStore:
-    path: ./conf-local/keystore/state-store
-  cryptoStore:
-    path: ./conf-local/keystore/msp
+    path: ./conf-local/keystore/hfc-kvs
+    cryptoStore:
+      path: ./conf-local/keystore/hfc-msp
   tlsCerts:
     client:
       key:
@@ -31,8 +31,9 @@ organizations:
     peers:
       - peer0.org1.lzawt.com
       - peer1.org1.lzawt.com
-  certificateAuthorities:
-    - ca.org1.lzawt.com
+    certificateAuthorities:
+      - ca.org1.lzawt.com
+
   org2:
     mspid: Org2MSP
     cryptoPath:  peerOrganizations/org2.lzawt.com/users/{username}@org2.lzawt.com/msp
@@ -98,11 +99,11 @@ certificateAuthorities:
     tlsCACerts:
       path: ./conf-local/crypto-config/peerOrganizations/org1.lzawt.com/ca/ca.org1.lzawt.com-cert.pem
     #   # Client key and cert for SSL handshake with Fabric CA
-    # client:
-    #   key:
-    #     path: ${GOPATH}/src/github.com/hyperledger/fabric-sdk-go/test/fixtures/fabricca/tls/certs/client/client_fabric_client-key.pem
-    #   cert:
-    #     path: ${GOPATH}/src/github.com/hyperledger/fabric-sdk-go/test/fixtures/fabricca/tls/certs/client/client_fabric_client.pem
+    client:
+      key:
+        path: ./conf-local/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/c988cd53f2bef77fdce6fca00bb242dfff7b54acc72d8484dd6232eef56af5db_sk
+      cert:
+        path: ./conf-local/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/tlsca.org1.lzawt.com-cert.pem
 
     # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
     # needed to enroll and invoke new users.
@@ -131,9 +132,8 @@ entityMatchers:
       urlSubstitutionExp: localhost:8050
       sslTargetOverrideUrlSubstitutionExp: orderer2.lzawt.com
       mappedHost: orderer2.lzawt.com
-
   certificateAuthority:
     - pattern: ca.org1.lzawt.com
-      urlSubstitutionExp: localhost:7054
+      urlSubstitutionExp: https://localhost:7054
       sslTargetOverrideUrlSubstitutionExp: ca.org1.lzawt.com
       mappedHost: ca.org1.lzawt.com
