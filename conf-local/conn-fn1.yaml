@@ -31,6 +31,8 @@ organizations:
     peers:
       - peer0.org1.lzawt.com
       - peer1.org1.lzawt.com
+  certificateAuthorities:
+    - ca.org1.lzawt.com
   org2:
     mspid: Org2MSP
     cryptoPath:  peerOrganizations/org2.lzawt.com/users/{username}@org2.lzawt.com/msp
@@ -90,6 +92,26 @@ peers:
     tlsCACerts:
       path: ./conf-local/crypto-config/peerOrganizations/org2.lzawt.com/tlsca/tlsca.org2.lzawt.com-cert.pem
 
+certificateAuthorities:
+  ca.org1.lzawt.com:
+    url: https://ca.org1.lzawt.com:7054
+    tlsCACerts:
+      path: ./conf-local/crypto-config/peerOrganizations/org1.lzawt.com/ca/ca.org1.lzawt.com-cert.pem
+    #   # Client key and cert for SSL handshake with Fabric CA
+    # client:
+    #   key:
+    #     path: ${GOPATH}/src/github.com/hyperledger/fabric-sdk-go/test/fixtures/fabricca/tls/certs/client/client_fabric_client-key.pem
+    #   cert:
+    #     path: ${GOPATH}/src/github.com/hyperledger/fabric-sdk-go/test/fixtures/fabricca/tls/certs/client/client_fabric_client.pem
+
+    # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
+    # needed to enroll and invoke new users.
+    registrar:
+      enrollId: admin
+      enrollSecret: adminpw
+    # [Optional] The optional name of the CA.
+    caName: ca.org1.lzawt.com
+
 entityMatchers:
   peer:
     - pattern: peer0.org1.lzawt.com
@@ -109,3 +131,9 @@ entityMatchers:
       urlSubstitutionExp: localhost:8050
       sslTargetOverrideUrlSubstitutionExp: orderer2.lzawt.com
       mappedHost: orderer2.lzawt.com
+
+  certificateAuthority:
+    - pattern: ca.org1.lzawt.com
+      urlSubstitutionExp: localhost:7054
+      sslTargetOverrideUrlSubstitutionExp: ca.org1.lzawt.com
+      mappedHost: ca.org1.lzawt.com
