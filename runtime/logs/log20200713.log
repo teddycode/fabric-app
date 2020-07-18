@@ -1,0 +1,4 @@
+[DEBUG][user.go:101]2020/07/13 19:58:57 [chaincode invoke success! tx id:5b560a0d7cb7d569ce31c442c418dbb69db803fe5ade787c5eedaa449457431c]
+[DEBUG][user.go:104]2020/07/13 19:58:57 [Found old user and deleted: <nil>]
+[DEBUG][user.go:102]2020/07/13 23:22:34 [chaincode invoke success! tx id:ce1ec4d77ffeecdc463c1a85ac8d0140d2f5132118e336ce7272a6f7741ba396]
+[DEBUG][user.go:105]2020/07/13 23:22:34 [Found old user and deleted: <nil>]

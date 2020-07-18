@@ -1,0 +1,6 @@
+[DEBUG][user.go:102]2020/07/17 09:12:01 [chaincode invoke success! tx id:18e7ab8c1905fdc7b455364d79dda9d16d1c0dc3bc84e7dcdc728b73cd9aab6f]
+[DEBUG][user.go:105]2020/07/17 09:12:01 [Found old user and deleted: <nil>]
+[DEBUG][user.go:102]2020/07/17 09:24:33 [chaincode invoke success! tx id:80029eb515dad2b1d1ab5ba69c97ab9fccf72ae3cbb75570be429fa53ae86a96]
+[ERROR][channel.go:39]2020/07/17 10:27:56 [QueryTransaction error: QueryTransaction failed: Transaction processing for endorser [localhost:7051]: Chaincode status Code: (500) UNKNOWN. Description: Failed to get transaction with id , error Entry not found in index]
+[ERROR][channel.go:39]2020/07/17 12:51:17 [QueryTransaction error: QueryTransaction failed: Transaction processing for endorser [localhost:7051]: Chaincode status Code: (500) UNKNOWN. Description: Failed to get transaction with id , error Entry not found in index]
+[DEBUG][user.go:102]2020/07/17 14:15:01 [chaincode invoke success! tx id:a37a138f624ef1478d1f95d2a4d642afdfcc9e0b48753596acd2386f736e9688]

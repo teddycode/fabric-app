@@ -1,0 +1,8 @@
+[ERROR][user.go:520]2020/07/14 11:13:44 [DB Error: Error 1292: Incorrect datetime value: '0001-01-01 00:00:00 +0000 UTC' for column 'timestamp' at row 1]
+[DEBUG][user.go:102]2020/07/14 11:37:53 [chaincode invoke success! tx id:971b9c6d56d1f8480abbc3cc05792d301d1961249abbe30ebb918c34450ff2fa]
+[DEBUG][user.go:105]2020/07/14 11:37:53 [Found old user and deleted: <nil>]
+[ERROR][bcs.go:79]2020/07/14 12:41:02 [DB count error: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '12:41:02 and TIMESTAMP > 2020-07-14 12:41:02  UNION SELECT '14' AS unit, COUNT(i' at line 1]
+[ERROR][bcs.go:91]2020/07/14 12:41:02 [DB count error: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '12:41:02 and TIMESTAMP > 2020-07-14 12:41:02  UNION SELECT '14' AS unit, COUNT(i' at line 1]
+[ERROR][channel.go:39]2020/07/14 15:04:12 [QueryTransaction error: QueryTransaction failed: Transaction processing for endorser [localhost:7051]: Chaincode status Code: (500) UNKNOWN. Description: Failed to get transaction with id b9c52e66c1ebfc826e324a394a106f9dc9550fed4390808b2d8932ff91c92b5a, error Entry not found in index]
+[DEBUG][user.go:102]2020/07/14 21:02:16 [chaincode invoke success! tx id:1a2b27809ec0b6090a920c46e8bea4f60a1b14b9d383b77c758e57d97ef4d15c]
+[DEBUG][user.go:105]2020/07/14 21:02:16 [Found old user and deleted: <nil>]

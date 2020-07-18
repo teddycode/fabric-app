@@ -4,20 +4,19 @@ version: 1.0.0
 client:
   organization: org2
   logging:
-    level: debug
+    level: info
   cryptoconfig:
-    path: ./conf/crypto-config
+    path: ./conf-local/crypto-config
   credentialStore:
-    path: ./conf/keystore/state-store
+    path: ./conf-local/keystore/hlf-kvs
   cryptoStore:
-    path: ./conf/keystore/msp
+    path: ./conf-local/keystore/msp
   tlsCerts:
     client:
       key:
-        path: ./conf/crypto-config/peerOrganizations/org2.lzawt.com/users/User1@org2.lzawt.com/tls/client.key
+        path: ./conf-local/crypto-config/peerOrganizations/org2.lzawt.com/users/User1@org2.lzawt.com/tls/client.key
       cert:
-        path: ./conf/crypto-config/peerOrganizations/org2.lzawt.com/users/User1@org2.lzawt.com/tls/client.crt
-
+        path: ./conf-local/crypto-config/peerOrganizations/org2.lzawt.com/users/User1@org2.lzawt.com/tls/client.crt
 
 channels:
   mychannel:
@@ -25,6 +24,7 @@ channels:
       peer0.org1.lzawt.com:
       peer1.org1.lzawt.com:
       peer0.org2.lzawt.com:
+
 
 organizations:
   org1:
@@ -44,7 +44,7 @@ organizations:
 
 orderers:
   orderer2.lzawt.com:
-    url: orderer2.lzawt.com:7050
+    url: orderer2.lzawt.com:8050
     grpcOptions:
       ssl-target-name-override: orderer2.lzawt.com
       keep-alive-time: 0s
@@ -53,7 +53,7 @@ orderers:
       fail-fast: false
       allow-insecure: false
     tlsCACerts:
-      path: ./config/crypto-config/ordererOrganizations/lzawt.com/tlsca/tlsca.lzawt.com-cert.pem
+      path: ./conf-local/crypto-config/ordererOrganizations/lzawt.com/tlsca/tlsca.lzawt.com-cert.pem
 
 peers:
   peer0.org1.lzawt.com:
@@ -66,7 +66,7 @@ peers:
       fail-fast: false
       allow-insecure: false
     tlsCACerts:
-      path: ./config/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/tlsca.org1.lzawt.com-cert.pem
+      path: ./conf-local/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/tlsca.org1.lzawt.com-cert.pem
 
   peer1.org1.lzawt.com:
     url: peer1.org1.lzawt.com:7051
@@ -78,7 +78,7 @@ peers:
       fail-fast: false
       allow-insecure: false
     tlsCACerts:
-      path: ./config/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/tlsca.org1.lzawt.com-cert.pem
+      path: ./conf-local/crypto-config/peerOrganizations/org1.lzawt.com/tlsca/tlsca.org1.lzawt.com-cert.pem
 
   peer0.org2.lzawt.com:
     url: peer0.org2.lzawt.com:7051
@@ -90,24 +90,44 @@ peers:
       fail-fast: false
       allow-insecure: false
     tlsCACerts:
-      path: ./config/crypto-config/peerOrganizations/org2.lzawt.com/tlsca/tlsca.org2.lzawt.com-cert.pem
+      path: ./conf-local/crypto-config/peerOrganizations/org2.lzawt.com/tlsca/tlsca.org2.lzawt.com-cert.pem
+
+certificateAuthorities:
+  ca.org1.lzawt.com:
+    url: https://ca.org1.lzawt.com:7054
+    tlsCACerts:
+      path: ./conf-local/crypto-config/peerOrganizations/org1.lzawt.com/ca/ca.org1.lzawt.com-cert.pem
+    #   # Client key and cert for SSL handshake with Fabric CA
+    # client:
+    #   key:
+    #     path: ${GOPATH}/src/github.com/hyperledger/fabric-sdk-go/test/fixtures/fabricca/tls/certs/client/client_fabric_client-key.pem
+    #   cert:
+    #     path: ${GOPATH}/src/github.com/hyperledger/fabric-sdk-go/test/fixtures/fabricca/tls/certs/client/client_fabric_client.pem
+
+    # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
+    # needed to enroll and invoke new users.
+    registrar:
+      enrollId: admin
+      enrollSecret: adminpw
+    # [Optional] The optional name of the CA.
+    caName: ca.org1.lzawt.com
 
 entityMatchers:
   peer:
     - pattern: peer0.org1.lzawt.com
-      urlSubstitutionExp: 1.71.143.57:7051
+      urlSubstitutionExp: localhost:7051
       sslTargetOverrideUrlSubstitutionExp: peer0.org1.lzawt.com
       mappedHost: peer1.org1.lzawt.com
     - pattern: peer1.org1.lzawt.com
-      urlSubstitutionExp: 1.71.141.197:7051
+      urlSubstitutionExp: localhost:8051
       sslTargetOverrideUrlSubstitutionExp: peer1.org1.lzawt.com
       mappedHost: peer0.org2.lzawt.com
     - pattern: peer0.org2.lzawt.com
-      urlSubstitutionExp: 1.71.135.106:7051
+      urlSubstitutionExp: localhost:9051
       sslTargetOverrideUrlSubstitutionExp: peer0.org2.lzawt.com
       mappedHost: peer1.org2.lzawt.com
   orderer:
     - pattern: orderer2.lzawt.com
-      urlSubstitutionExp: 1.71.141.197:7050
+      urlSubstitutionExp: localhost:8050
       sslTargetOverrideUrlSubstitutionExp: orderer2.lzawt.com
       mappedHost: orderer2.lzawt.com

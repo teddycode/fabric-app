@@ -1,96 +1,63 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	v1 "github.com/fabric-app/controller/api/v1"
+	"github.com/gin-gonic/gin"
+	"io"
 	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"time"
 
-	cli "github.com/fabric-app/controller"
+	"github.com/fabric-app/pkg/setting"
+	"github.com/fabric-app/routers"
 )
 
-const (
-	org1CfgPath = "./config/conn-fn1.yaml"
-	org2CfgPath = "./config/conn-fn2.yaml"
-)
+// @title fabirc bcs API
+// @version 1.0
+// @description  trace
 
-var (
-	peer0Org1 = "peer0.org1.lzawt.com"
-	peer0Org2 = "peer0.org2.lzawt.com"
-)
+// @host 202.193.60.108:8000
+// @BasePath /
 
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
-	org1Client := cli.New(org1CfgPath, "Org1", "Admin", "User1")
-	org2Client := cli.New(org2CfgPath, "Org2", "Admin", "User1")
+	f, _ := os.Create("gin.log")
+	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+	defer v1.BCS.Close()
 
-	defer org1Client.Close()
-	defer org2Client.Close()
+	router := routers.InitRouter()
 
-	// Install, instantiate, invoke, query
-	Phase1(org1Client, org2Client)
-	// Install, upgrade, invoke, query
-	Phase2(org1Client, org2Client)
-}
-
-func Phase1(cli1, cli2 *cli.Client) {
-	log.Println("=================== Phase 1 begin ===================")
-	defer log.Println("=================== Phase 1 end ===================")
-
-	if err := cli1.InstallCC("v1", peer0Org1); err != nil {
-		log.Panicf("Intall chaincode error: %v", err)
+	s := &http.Server{
+		Addr:           fmt.Sprintf(":%d", setting.HTTPPort),
+		Handler:        router,
+		ReadTimeout:    setting.ReadTimeout,
+		WriteTimeout:   setting.WriteTimeout,
+		MaxHeaderBytes: 1 << 20,
 	}
-	log.Println("Chaincode has been installed on org1's peers")
 
-	if err := cli2.InstallCC("v1", peer0Org2); err != nil {
-		log.Panicf("Intall chaincode error: %v", err)
+	go func() {
+		if err := s.ListenAndServe(); err != nil {
+			log.Printf("Listen: %s\n", err)
+		}
+	}()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+
+	log.Println("Shutdown Server ...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := s.Shutdown(ctx); err != nil {
+		log.Fatal("Server Shutdown:", err)
 	}
-	log.Println("Chaincode has been installed on org2's peers")
 
-	// InstantiateCC chaincode only need once for each channel
-	if _, err := cli1.InstantiateCC("v1", peer0Org1); err != nil {
-		log.Panicf("Instantiated chaincode error: %v", err)
-	}
-	log.Println("Chaincode has been instantiated")
-
-	if _, err := cli1.InvokeCC([]string{peer0Org1}); err != nil {
-		log.Panicf("Invoke chaincode error: %v", err)
-	}
-	log.Println("Invoke chaincode success")
-
-	if err := cli1.QueryCC("peer0.org1.lzawt.com", "a"); err != nil {
-		log.Panicf("Query chaincode error: %v", err)
-	}
-	log.Println("Query chaincode success on peer0.org1")
-}
-
-func Phase2(cli1, cli2 *cli.Client) {
-	log.Println("=================== Phase 2 begin ===================")
-	defer log.Println("=================== Phase 2 end ===================")
-
-	v := "v2"
-
-	// Install new version chaincode
-	if err := cli1.InstallCC(v, peer0Org1); err != nil {
-		log.Panicf("Intall chaincode error: %v", err)
-	}
-	log.Println("Chaincode has been installed on org1's peers")
-
-	if err := cli2.InstallCC(v, peer0Org2); err != nil {
-		log.Panicf("Intall chaincode error: %v", err)
-	}
-	log.Println("Chaincode has been installed on org2's peers")
-
-	// Upgrade chaincode only need once for each channel
-	if err := cli1.UpgradeCC(v, peer0Org1); err != nil {
-		log.Panicf("Upgrade chaincode error: %v", err)
-	}
-	log.Println("Upgrade chaincode success for channel")
-
-	if _, err := cli1.InvokeCC([]string{"peer0.org1.lzawt.com",
-		"peer0.org2.lzawt.com"}); err != nil {
-		log.Panicf("Invoke chaincode error: %v", err)
-	}
-	log.Println("Invoke chaincode success")
-
-	if err := cli1.QueryCC("peer0.org2.lzawt.com", "a"); err != nil {
-		log.Panicf("Query chaincode error: %v", err)
-	}
-	log.Println("Query chaincode success on peer0.org2")
+	log.Println("Server exiting")
 }

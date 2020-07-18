@@ -1,0 +1,95 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+volumes:
+  orderer2.lzawt.com:
+  orderer3.lzawt.com:
+  orderer4.lzawt.com:
+  orderer5.lzawt.com:
+
+networks:
+  byfn:
+
+services:
+
+  ca0:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.org1.lzawt.com
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.lzawt.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/63db1a92c35491fc28dd419a6b7cb298c4f180731bfba7dfb195bf9884d8d29a_sk
+    ports:
+      - "7054:7054"
+    command: sh -c 'fabric-ca-server start --cfg.identities.allowremove --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.lzawt.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/63db1a92c35491fc28dd419a6b7cb298c4f180731bfba7dfb195bf9884d8d29a_sk -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/org1.lzawt.com/ca/:/etc/hyperledger/fabric-ca-server-config
+      #- ./fabric-ca-server/ca0/:/etc/hyperledger/fabric-ca-server
+    container_name: ca.org1.lzawt.com
+    networks:
+      - byfn
+
+  orderer2.lzawt.com:
+    extends:
+      file: base/peer-base.yaml
+      service: orderer-base
+    container_name: orderer2.lzawt.com
+    networks:
+    - byfn
+    volumes:
+        - ./artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+        - ./crypto-config/ordererOrganizations/lzawt.com/orderers/orderer2.lzawt.com/msp:/var/hyperledger/orderer/msp
+        - ./crypto-config/ordererOrganizations/lzawt.com/orderers/orderer2.lzawt.com/tls/:/var/hyperledger/orderer/tls
+        - orderer2.lzawt.com:/var/hyperledger/production/orderer
+    ports:
+    - 8050:7050
+
+  orderer3.lzawt.com:
+    extends:
+      file: base/peer-base.yaml
+      service: orderer-base
+    container_name: orderer3.lzawt.com
+    networks:
+    - byfn
+    volumes:
+        - ./artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+        - ./crypto-config/ordererOrganizations/lzawt.com/orderers/orderer3.lzawt.com/msp:/var/hyperledger/orderer/msp
+        - ./crypto-config/ordererOrganizations/lzawt.com/orderers/orderer3.lzawt.com/tls/:/var/hyperledger/orderer/tls
+        - orderer3.lzawt.com:/var/hyperledger/production/orderer
+    ports:
+    - 9050:7050
+
+  orderer4.lzawt.com:
+    extends:
+      file: base/peer-base.yaml
+      service: orderer-base
+    container_name: orderer4.lzawt.com
+    networks:
+    - byfn
+    volumes:
+        - ./artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+        - ./crypto-config/ordererOrganizations/lzawt.com/orderers/orderer4.lzawt.com/msp:/var/hyperledger/orderer/msp
+        - ./crypto-config/ordererOrganizations/lzawt.com/orderers/orderer4.lzawt.com/tls/:/var/hyperledger/orderer/tls
+        - orderer4.lzawt.com:/var/hyperledger/production/orderer
+    ports:
+    - 10050:7050
+
+  orderer5.lzawt.com:
+    extends:
+      file: base/peer-base.yaml
+      service: orderer-base
+    container_name: orderer5.lzawt.com
+    networks:
+    - byfn
+    volumes:
+        - ./artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+        - ./crypto-config/ordererOrganizations/lzawt.com/orderers/orderer5.lzawt.com/msp:/var/hyperledger/orderer/msp
+        - ./crypto-config/ordererOrganizations/lzawt.com/orderers/orderer5.lzawt.com/tls/:/var/hyperledger/orderer/tls
+        - orderer5.lzawt.com:/var/hyperledger/production/orderer
+    ports:
+    - 11050:7050
